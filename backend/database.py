@@ -1,19 +1,36 @@
 
 import os
+from pathlib import Path
 from dotenv import load_dotenv
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, URL
 
-load_dotenv()
+# Load the .env file from the same folder
+ENV_PATH = Path(__file__).resolve().parent / ".env"
+load_dotenv(ENV_PATH, override=True)
 
-POSTGRES_USER = os.getenv("POSTGRES_USER")
-POSTGRES_PASSWORD = os.getenv("POSTGRES_PASSWORD")
-POSTGRES_HOST = os.getenv("POSTGRES_HOST", "localhost")
-POSTGRES_PORT = os.getenv("POSTGRES_PORT", "5432")
-POSTGRES_DB = os.getenv("POSTGRES_DB", "ecommerce_analytics")
+# Read credentials
+username = os.getenv("POSTGRES_USER")
+password = os.getenv("POSTGRES_PASSWORD")
+host = os.getenv("POSTGRES_HOST", "localhost")
+port = int(os.getenv("POSTGRES_PORT", "5432"))
+database_name = os.getenv("POSTGRES_DB", "ecommerce_analytics")
 
-DATABASE_URL = (
-    f"postgresql+psycopg://{POSTGRES_USER}:{POSTGRES_PASSWORD}"
-    f"@{POSTGRES_HOST}:{POSTGRES_PORT}/{POSTGRES_DB}"
+# Check environment variables
+print("Loaded .env:", ENV_PATH.exists())
+print("Username:", username)
+print("Password loaded:", password is not None)
+
+# Create database URL safely
+DATABASE_URL = URL.create(
+    drivername="postgresql+psycopg",
+    username=username,
+    password=password,
+    host=host,
+    port=port,
+    database=database_name
 )
 
+# Create SQLAlchemy engine
 engine = create_engine(DATABASE_URL)
+
+print("Database host:", engine.url.host)
