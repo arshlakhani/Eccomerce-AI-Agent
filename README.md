@@ -153,7 +153,7 @@ Eccomerce-AI-Agent/
 
 ```bash
 git clone https://github.com/arshlakhani/Eccomerce-AI-Agent.git
-cd YOUR_REPOSITORY
+cd Eccomerce-AI-Agent
 ```
 
 ### 2. Backend Setup
